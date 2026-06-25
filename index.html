@@ -1,257 +1,551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Hack Bot – Offline</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #0b0e14;
-      color: #e0e6f0;
-      font-family: 'Courier New', monospace;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .container {
-      max-width: 700px;
-      width: 100%;
-    }
-    h1 {
-      color: #fbbf24;
-      font-size: 24px;
-      margin-bottom: 4px;
-    }
-    .sub {
-      color: #6b7280;
-      font-size: 13px;
-      margin-bottom: 20px;
-    }
-    .card {
-      background: #1a202a;
-      border: 1px solid #2a2f3a;
-      border-radius: 12px;
-      padding: 16px 18px;
-      margin-bottom: 14px;
-    }
-    .card h3 {
-      color: #fbbf24;
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid #2a2f3a;
-      background: #0b0e14;
-      color: #e0e6f0;
-      font-size: 14px;
-      font-family: inherit;
-      margin-bottom: 10px;
-    }
-    input:focus, textarea:focus {
-      border-color: #fbbf24;
-      outline: none;
-    }
-    .btn {
-      padding: 10px 18px;
-      border-radius: 8px;
-      border: none;
-      background: #fbbf24;
-      color: #0b0e14;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      transition: 0.15s;
-      margin-right: 6px;
-      margin-bottom: 6px;
-    }
-    .btn:hover { background: #f59e0b; }
-    .btn-danger { background: #b31b1b; color: #fff; }
-    .btn-danger:hover { background: #8a1515; }
-    .data-entry {
-      background: #0b0e14;
-      border: 1px solid #2a2f3a;
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 13px;
-      white-space: pre-wrap;
-      word-break: break-all;
-      max-height: 300px;
-      overflow-y: auto;
-      margin-top: 6px;
-    }
-    .stats {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      font-size: 13px;
-      color: #8a9bb0;
-    }
-    .stats span { color: #fbbf24; font-weight: 600; }
-    .flex { display: flex; flex-wrap: wrap; gap: 6px; }
-    .mt-10 { margin-top: 10px; }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Hack Bot – Advanced</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: #0b0e14;
+            color: #e0e6f0;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { max-width: 900px; width: 100%; }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #fbbf24;
+            font-size: 24px;
+        }
+        .header .stats {
+            font-size: 13px;
+            color: #8a9bb0;
+        }
+        .header .stats span { color: #fbbf24; font-weight: 600; }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: #1a202a;
+            border: 1px solid #2a2f3a;
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+        }
+        .card h3 {
+            color: #fbbf24;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        /* ===== FORMS ===== */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .form-row input, .form-row select, .form-row textarea {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #2a2f3a;
+            background: #0b0e14;
+            color: #e0e6f0;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+            border-color: #fbbf24;
+            outline: none;
+        }
+        .form-row textarea {
+            min-height: 60px;
+            resize: vertical;
+            width: 100%;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            background: #fbbf24;
+            color: #0b0e14;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .btn:hover { background: #f59e0b; }
+        .btn-danger { background: #b31b1b; color: #fff; }
+        .btn-danger:hover { background: #8a1515; }
+        .btn-outline { background: transparent; border: 1px solid #2a2f3a; color: #8a9bb0; }
+        .btn-outline:hover { background: #2a2f3a; color: #fff; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+        .flex { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+        /* ===== TABLE ===== */
+        .table-wrap {
+            overflow-x: auto;
+            max-height: 380px;
+            overflow-y: auto;
+            margin-top: 6px;
+            border: 1px solid #2a2f3a;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 500px;
+        }
+        th {
+            background: #0b0e14;
+            color: #8a9bb0;
+            font-weight: 600;
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 2px solid #2a2f3a;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #1a202a;
+            word-break: break-word;
+        }
+        tr:hover td { background: #1a202a; }
+        .tag {
+            display: inline-block;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            background: #2a2f3a;
+            color: #8a9bb0;
+        }
+        .tag-bank { background: #1a3a5a; color: #6b9fd4; }
+        .tag-crypto { background: #3a2a1a; color: #fbbf24; }
+        .tag-high { background: #4a1a1a; color: #f87171; }
+
+        /* ===== SEARCH ===== */
+        .search-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .search-bar input {
+            flex: 1;
+            min-width: 160px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #2a2f3a;
+            background: #0b0e14;
+            color: #e0e6f0;
+            font-size: 13px;
+        }
+        .search-bar input:focus { border-color: #fbbf24; outline: none; }
+
+        /* ===== STATUS ===== */
+        .status-bar {
+            font-size: 12px;
+            color: #6b7280;
+            padding: 4px 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e2632;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            border: 1px solid #2a2f3a;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .toast.show { opacity: 1; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .header { flex-direction: column; align-items: flex-start; }
+            .form-row { flex-direction: column; }
+            .form-row input, .form-row select { min-width: 100%; }
+            .flex { flex-direction: column; align-items: stretch; }
+            .btn { width: 100%; text-align: center; }
+            .search-bar { flex-direction: column; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
 
-  <h1>⚡ Hack Bot</h1>
-  <div class="sub">Offline — No Telegram, No External Dependencies</div>
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <h1>⚡ Hack Bot</h1>
+        <div class="stats">📦 <span id="entryCount">0</span> entries · 🔍 <span id="uniqueKeys">0</span> unique keys</div>
+    </div>
 
-  <!-- CAPTURE FORM -->
-  <div class="card">
-    <h3>📥 Capture Data</h3>
-    <input type="text" id="entryKey" placeholder="Label (e.g. Email, Password, SSN)" />
-    <input type="text" id="entryValue" placeholder="Value (e.g. victim@email.com)" />
-    <div class="flex">
-      <button class="btn" onclick="captureData()">+ Capture</button>
-      <button class="btn btn-danger" onclick="clearAll()">🗑️ Clear All</button>
+    <!-- ===== CAPTURE FORM ===== -->
+    <div class="card">
+        <h3>📥 Capture</h3>
+        <div class="form-row">
+            <select id="templateSelect">
+                <option value="">— Template —</option>
+                <option value="Email:Password">Email:Password</option>
+                <option value="SSN:DOB">SSN:DOB</option>
+                <option value="CreditCard:CVV">CreditCard:CVV</option>
+                <option value="Wallet:Seed">Wallet:Seed</option>
+                <option value="Username:Password">Username:Password</option>
+            </select>
+            <input type="text" id="entryKey" placeholder="Label (e.g. Email, SSN)" />
+            <input type="text" id="entryValue" placeholder="Value" />
+            <select id="tagSelect">
+                <option value="">No tag</option>
+                <option value="bank">🏦 Bank</option>
+                <option value="crypto">₿ Crypto</option>
+                <option value="high">⭐ High Value</option>
+            </select>
+            <button class="btn" onclick="captureData()">+ Capture</button>
+        </div>
+        <div class="form-row">
+            <textarea id="bulkInput" placeholder="Bulk paste: key:value (one per line)"></textarea>
+            <button class="btn btn-outline" onclick="bulkCapture()">📥 Bulk Import</button>
+        </div>
     </div>
-  </div>
 
-  <!-- STORED DATA -->
-  <div class="card">
-    <h3>📦 Stored Data</h3>
-    <div class="stats">
-      <span id="entryCount">0</span> entries
+    <!-- ===== SEARCH + FILTER ===== -->
+    <div class="card">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Search keys, values, tags..." oninput="renderTable()" />
+            <select id="filterTag" onchange="renderTable()">
+                <option value="">All tags</option>
+                <option value="bank">🏦 Bank</option>
+                <option value="crypto">₿ Crypto</option>
+                <option value="high">⭐ High Value</option>
+            </select>
+            <select id="sortSelect" onchange="renderTable()">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="key">Sort by key (A-Z)</option>
+            </select>
+        </div>
+        <div class="table-wrap" id="tableWrap">
+            <table>
+                <thead><tr><th>#</th><th>Key</th><th>Value</th><th>Tag</th><th>Time</th><th style="width:60px;">Action</th></tr></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
     </div>
-    <div id="dataDisplay" class="data-entry">No data captured yet.</div>
-    <div class="flex mt-10">
-      <button class="btn" onclick="exportJSON()">⬇️ Export JSON</button>
-      <button class="btn" onclick="copyData()">📋 Copy</button>
+
+    <!-- ===== EXPORT / IMPORT ===== -->
+    <div class="card">
+        <div class="flex">
+            <button class="btn" onclick="exportJSON()">⬇️ Export JSON</button>
+            <button class="btn" onclick="exportCSV()">⬇️ Export CSV</button>
+            <button class="btn" onclick="copyTable()">📋 Copy Table</button>
+            <button class="btn btn-outline" onclick="document.getElementById('importInput').click()">📂 Import JSON</button>
+            <input type="file" id="importInput" accept=".json" style="display:none;" onchange="importJSON(event)" />
+            <button class="btn btn-danger" onclick="clearAll()">🗑️ Clear All</button>
+        </div>
+        <div class="status-bar">
+            <span>🔒 Data stored locally — no external calls</span>
+            <span id="lastExport"></span>
+        </div>
     </div>
-  </div>
 
 </div>
 
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
 <script>
-  // ============================================================
-  // HACK BOT – OFFLINE
-  // Stores data in localStorage — no external services
-  // ============================================================
+    // ============================================================
+    // HACK BOT – ADVANCED
+    // localStorage, search, tags, bulk import, CSV, encryption-ready
+    // ============================================================
 
-  const STORAGE_KEY = 'hackbot_data';
+    const STORAGE_KEY = 'hackbot_advanced';
 
-  // ---- LOAD DATA ----
-  function loadData() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  }
-
-  // ---- SAVE DATA ----
-  function saveData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }
-
-  // ---- RENDER DISPLAY ----
-  function render() {
-    const data = loadData();
-    const display = document.getElementById('dataDisplay');
-    const count = document.getElementById('entryCount');
-
-    count.textContent = data.length;
-
-    if (data.length === 0) {
-      display.textContent = 'No data captured yet.';
-      return;
+    // ---- HELPERS ----
+    function toast(msg) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => el.classList.remove('show'), 2500);
     }
 
-    // Format as readable list
-    let text = '';
-    data.forEach((entry, i) => {
-      text += `[${i + 1}] ${entry.key}: ${entry.value}\n`;
+    function loadData() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            return raw ? JSON.parse(raw) : [];
+        } catch { return []; }
+    }
+
+    function saveData(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function getNextId(data) {
+        return data.length ? Math.max(...data.map(d => d.id || 0)) + 1 : 1;
+    }
+
+    // ---- CAPTURE ----
+    function captureData() {
+        const key = document.getElementById('entryKey').value.trim();
+        const value = document.getElementById('entryValue').value.trim();
+        const tag = document.getElementById('tagSelect').value;
+        if (!key || !value) { toast('❌ Please enter both key and value.'); return; }
+
+        const data = loadData();
+        data.push({
+            id: getNextId(data),
+            key,
+            value,
+            tag,
+            timestamp: new Date().toISOString()
+        });
+        saveData(data);
+        document.getElementById('entryKey').value = '';
+        document.getElementById('entryValue').value = '';
+        document.getElementById('tagSelect').value = '';
+        renderTable();
+        updateStats();
+        toast('✅ Captured');
+    }
+
+    // ---- BULK CAPTURE ----
+    function bulkCapture() {
+        const raw = document.getElementById('bulkInput').value;
+        if (!raw.trim()) { toast('❌ Paste something first.'); return; }
+        const lines = raw.split('\n').filter(l => l.includes(':'));
+        if (!lines.length) { toast('❌ No valid key:value pairs found.'); return; }
+
+        const data = loadData();
+        let added = 0;
+        lines.forEach(line => {
+            const idx = line.indexOf(':');
+            if (idx === -1) return;
+            const key = line.slice(0, idx).trim();
+            const value = line.slice(idx + 1).trim();
+            if (key && value) {
+                data.push({
+                    id: getNextId(data),
+                    key,
+                    value,
+                    tag: '',
+                    timestamp: new Date().toISOString()
+                });
+                added++;
+            }
+        });
+        saveData(data);
+        document.getElementById('bulkInput').value = '';
+        renderTable();
+        updateStats();
+        toast(`✅ Imported ${added} entries`);
+    }
+
+    // ---- RENDER TABLE ----
+    function renderTable() {
+        const data = loadData();
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const filterTag = document.getElementById('filterTag').value;
+        const sort = document.getElementById('sortSelect').value;
+
+        let filtered = data.filter(d => {
+            const matchSearch = d.key.toLowerCase().includes(search) || d.value.toLowerCase().includes(search) || (d.tag || '').includes(search);
+            const matchTag = !filterTag || d.tag === filterTag;
+            return matchSearch && matchTag;
+        });
+
+        // Sort
+        if (sort === 'newest') filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        else if (sort === 'oldest') filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        else if (sort === 'key') filtered.sort((a, b) => a.key.localeCompare(b.key));
+
+        const tbody = document.getElementById('tableBody');
+        if (!filtered.length) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6b7280;padding:20px;">No data</td></tr>';
+            return;
+        }
+
+        let html = '';
+        filtered.forEach((d, i) => {
+            const tagLabel = d.tag || '';
+            const tagClass = d.tag ? `tag-${d.tag}` : '';
+            const time = new Date(d.timestamp).toLocaleString();
+            html += `<tr>
+                <td>${i+1}</td>
+                <td><strong>${escHtml(d.key)}</strong></td>
+                <td>${escHtml(d.value)}</td>
+                <td>${tagLabel ? `<span class="tag ${tagClass}">${tagLabel}</span>` : ''}</td>
+                <td>${time}</td>
+                <td><button class="btn btn-danger btn-sm" onclick="deleteEntry(${d.id})">✕</button></td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+        updateStats();
+    }
+
+    function escHtml(str) {
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ---- DELETE ----
+    function deleteEntry(id) {
+        if (!confirm('Delete this entry?')) return;
+        let data = loadData();
+        data = data.filter(d => d.id !== id);
+        saveData(data);
+        renderTable();
+        toast('🗑️ Deleted');
+    }
+
+    // ---- CLEAR ALL ----
+    function clearAll() {
+        if (!confirm('⚠️ Delete ALL data?')) return;
+        saveData([]);
+        renderTable();
+        toast('🗑️ All data cleared');
+    }
+
+    // ---- UPDATE STATS ----
+    function updateStats() {
+        const data = loadData();
+        document.getElementById('entryCount').textContent = data.length;
+        const keys = new Set(data.map(d => d.key));
+        document.getElementById('uniqueKeys').textContent = keys.size;
+    }
+
+    // ---- EXPORT JSON ----
+    function exportJSON() {
+        const data = loadData();
+        if (!data.length) { toast('❌ No data to export'); return; }
+        const json = JSON.stringify(data, null, 2);
+        downloadFile(json, `hackbot_${new Date().toISOString().slice(0,10)}.json`, 'application/json');
+        toast('✅ JSON exported');
+    }
+
+    // ---- EXPORT CSV ----
+    function exportCSV() {
+        const data = loadData();
+        if (!data.length) { toast('❌ No data to export'); return; }
+        const header = 'ID,Key,Value,Tag,Timestamp\n';
+        const rows = data.map(d => `${d.id},"${d.key}","${d.value}","${d.tag||''}","${d.timestamp}"`).join('\n');
+        downloadFile(header + rows, `hackbot_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv');
+        toast('✅ CSV exported');
+    }
+
+    // ---- COPY TABLE ----
+    function copyTable() {
+        const data = loadData();
+        if (!data.length) { toast('❌ No data to copy'); return; }
+        let text = 'ID\tKey\tValue\tTag\tTimestamp\n';
+        data.forEach(d => {
+            text += `${d.id}\t${d.key}\t${d.value}\t${d.tag||''}\t${d.timestamp}\n`;
+        });
+        navigator.clipboard.writeText(text).then(() => toast('✅ Copied to clipboard'));
+    }
+
+    // ---- IMPORT JSON ----
+    function importJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (!Array.isArray(imported)) { toast('❌ Invalid format'); return; }
+                const data = loadData();
+                imported.forEach(d => {
+                    data.push({
+                        id: getNextId(data),
+                        key: d.key || 'unknown',
+                        value: d.value || '',
+                        tag: d.tag || '',
+                        timestamp: d.timestamp || new Date().toISOString()
+                    });
+                });
+                saveData(data);
+                renderTable();
+                toast(`✅ Imported ${imported.length} entries`);
+            } catch {
+                toast('❌ Failed to parse JSON');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    // ---- DOWNLOAD HELPER ----
+    function downloadFile(content, filename, mime) {
+        const blob = new Blob([content], { type: mime });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // ---- TEMPLATE SELECT ----
+    document.getElementById('templateSelect').addEventListener('change', function() {
+        const val = this.value;
+        if (!val) return;
+        const parts = val.split(':');
+        if (parts.length === 2) {
+            document.getElementById('entryKey').value = parts[0];
+            document.getElementById('entryValue').value = parts[1];
+        }
     });
-    display.textContent = text;
-  }
 
-  // ---- CAPTURE ----
-  function captureData() {
-    const keyInput = document.getElementById('entryKey');
-    const valueInput = document.getElementById('entryValue');
-
-    const key = keyInput.value.trim();
-    const value = valueInput.value.trim();
-
-    if (!key || !value) {
-      alert('Please enter both a label and a value.');
-      return;
-    }
-
-    const data = loadData();
-    data.push({ key, value, timestamp: new Date().toISOString() });
-    saveData(data);
-
-    keyInput.value = '';
-    valueInput.value = '';
-
-    render();
-  }
-
-  // ---- CLEAR ALL ----
-  function clearAll() {
-    if (!confirm('Delete all stored data?')) return;
-    saveData([]);
-    render();
-  }
-
-  // ---- EXPORT JSON ----
-  function exportJSON() {
-    const data = loadData();
-    if (data.length === 0) {
-      alert('No data to export.');
-      return;
-    }
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `hackbot_data_${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  // ---- COPY TO CLIPBOARD ----
-  function copyData() {
-    const data = loadData();
-    if (data.length === 0) {
-      alert('No data to copy.');
-      return;
-    }
-    let text = '';
-    data.forEach((entry, i) => {
-      text += `[${i + 1}] ${entry.key}: ${entry.value}\n`;
+    // ---- KEYBOARD SHORTCUTS ----
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            captureData();
+        }
+        if (e.key === 'Escape') {
+            document.getElementById('searchInput').value = '';
+            renderTable();
+        }
     });
-    navigator.clipboard.writeText(text).then(() => {
-      alert('✅ Copied to clipboard!');
-    }).catch(() => {
-      alert('❌ Failed to copy. Try selecting the text manually.');
-    });
-  }
 
-  // ---- KEYBOARD SHORTCUT ----
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      const active = document.activeElement;
-      if (active && (active.id === 'entryKey' || active.id === 'entryValue')) {
-        captureData();
-      }
-    }
-  });
-
-  // ---- INIT ----
-  render();
+    // ---- INIT ----
+    renderTable();
 </script>
-
 </body>
 </html>
